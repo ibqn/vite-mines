@@ -1,14 +1,30 @@
-import { tilesAtom } from '@/store'
-import { State, type Tile } from '@/types'
+import { gameStateAtom, generateMinePositionsAtom, tilesAtom } from '@/store'
+import { GameState, State, type Tile } from '@/types'
+import { useAtom, useSetAtom } from 'jotai'
 import { useImmerAtom } from 'jotai-immer'
 import { useEffect, useRef, type MouseEventHandler } from 'react'
 
-export const Cell = ({ tile }: { tile: Tile }) => {
+type CellProps = {
+  tile: Tile
+}
+
+export const Cell = ({ tile }: CellProps) => {
   const ref = useRef<HTMLDivElement>(null)
 
   const [_, setTiles] = useImmerAtom(tilesAtom)
+  const generateMinePositions = useSetAtom(generateMinePositionsAtom)
+  const [gameState, setGameState] = useAtom(gameStateAtom)
 
   const handleClick = (index: number) => () => {
+    if (gameState === GameState.idle) {
+      generateMinePositions(index)
+      setGameState(GameState.going)
+    }
+
+    if (gameState !== GameState.going && gameState !== GameState.idle) {
+      return
+    }
+
     setTiles((tiles) => {
       tiles[index].state = State.mine
       return tiles

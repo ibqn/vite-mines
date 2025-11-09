@@ -1,4 +1,6 @@
-import { State, type Tile } from '@/types'
+import { GameState, State, type Tile } from '@/types'
+import { NUMBER_OF_MINES } from '@/utils/constants'
+import { randomNumber } from '@/utils/random'
 import { atom } from 'jotai'
 
 export const boardSizeAtom = atom({ width: 9, height: 9 })
@@ -17,3 +19,25 @@ export const initializeTilesAtom = atom(null, (get, set) => {
 
   set(tilesAtom, initialTiles)
 })
+
+export const generateMinePositionsAtom = atom(null, (get, set, exceptIndex: number) => {
+  const mines = new Set<number>()
+  const tiles = get(tilesAtom)
+
+  while (mines.size < NUMBER_OF_MINES) {
+    const randomIndex = randomNumber(tiles.length)
+    if (randomIndex !== exceptIndex) {
+      mines.add(randomIndex)
+    }
+  }
+
+  const tilesWithMines = [...tiles]
+  for (const index of mines) {
+    tilesWithMines[index].mine = true
+  }
+
+  set(mineCountAtom, mines.size)
+  set(tilesAtom, tilesWithMines)
+})
+
+export const gameStateAtom = atom<GameState>(GameState.idle)
