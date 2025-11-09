@@ -116,3 +116,36 @@ export const revealTileAtom = atom(null, (get, set, currentIndex: number) => {
   }
   set(tilesAtom, newTiles)
 })
+
+export const tryRevealTileAtom = atom(null, (get, set, index: number) => {
+  const tiles = get(tilesAtom)
+  const tile = tiles[index]
+
+  if (tile.state !== State.number) {
+    return
+  }
+
+  const getNearbyTiles = get(nearbyTilesAtom)
+  const nearbyTiles = getNearbyTiles(index)
+  const markedCount = nearbyTiles.filter((tile) => tile.state === State.marked).length
+
+  const nearbyMinesCount = tile.adjacentMinesCount ?? 0
+  if (markedCount === nearbyMinesCount) {
+    for (const nearbyTile of nearbyTiles) {
+      set(revealTileAtom, nearbyTile.index)
+    }
+  }
+})
+
+export const markTileAtom = atom(null, (get, set, index: number) => {
+  const tiles = get(tilesAtom)
+  const selectedTile = tiles[index]
+
+  const marked = selectedTile.state === State.marked
+
+  const newTiles = tiles.map((tile) =>
+    tile.index === index ? { ...tile, state: marked ? State.hidden : State.marked } : tile
+  )
+  set(tilesAtom, newTiles)
+  set(mineCountAtom, get(mineCountAtom) + (marked ? 1 : -1))
+})

@@ -1,5 +1,5 @@
-import { gameStateAtom, generateMinePositionsAtom, revealTileAtom, tilesAtom } from '@/store'
-import { GameState, State, type Tile } from '@/types'
+import { gameStateAtom, generateMinePositionsAtom, markTileAtom, revealTileAtom, tryRevealTileAtom } from '@/store'
+import { GameState, type Tile } from '@/types'
 import { useAtom, useSetAtom } from 'jotai'
 import { useEffect, useRef, type MouseEventHandler } from 'react'
 
@@ -10,9 +10,10 @@ type CellProps = {
 export const Cell = ({ tile }: CellProps) => {
   const ref = useRef<HTMLDivElement>(null)
 
-  const [tiles, setTiles] = useAtom(tilesAtom)
+  const markTile = useSetAtom(markTileAtom)
   const generateMinePositions = useSetAtom(generateMinePositionsAtom)
   const revealTile = useSetAtom(revealTileAtom)
+  const tryRevealTile = useSetAtom(tryRevealTileAtom)
   const [gameState, setGameState] = useAtom(gameStateAtom)
 
   const handleClick = (index: number) => () => {
@@ -34,12 +35,12 @@ export const Cell = ({ tile }: CellProps) => {
     (event) => {
       event.preventDefault()
 
-      setTiles(
-        tiles.map((tile) =>
-          tile.index === index ? { ...tile, state: tile.state === State.marked ? State.hidden : State.marked } : tile
-        )
-      )
+      markTile(index)
     }
+
+  const handleDoubleClick = (index: number) => () => {
+    tryRevealTile(index)
+  }
 
   useEffect(() => {
     if (tile.adjacentMinesCount && ref.current) {
@@ -55,6 +56,7 @@ export const Cell = ({ tile }: CellProps) => {
         data-[state=mine]:bg-[url('./images/mine.svg')] data-[state=number]:bg-white"
       onClick={handleClick(tile.index)}
       onContextMenu={handleRightClick(tile.index)}
+      onDoubleClick={handleDoubleClick(tile.index)}
       data-state={tile.state}
     ></div>
   )
