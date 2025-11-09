@@ -42,31 +42,34 @@ export const generateMinePositionsAtom = atom(null, (get, set, exceptIndex: numb
 
 export const gameStateAtom = atom<GameState>(GameState.idle)
 
+// prettier-ignore
+const neighborOffsets = [
+  [-1, -1], [0, -1], [1, -1],
+  [-1,  0],/*(0,0)*/ [1,  0],
+  [-1,  1], [0,  1], [1,  1],
+]
+
 export const nearbyTilesAtom = atom((get) => (index: number) => {
   const tiles = get(tilesAtom)
   const boardSize = get(boardSizeAtom)
+  const x = index % boardSize.width
+  const y = Math.floor(index / boardSize.width)
 
   const nearbyTiles: Tile[] = []
 
-  for (let offsetX = -1; offsetX <= 1; offsetX++) {
-    for (let offsetY = -1; offsetY <= 1; offsetY++) {
-      if (offsetX === 0 && offsetY == 0) {
-        continue
-      }
+  for (const [dx, dy] of neighborOffsets) {
+    const nx = x + dx
+    const ny = y + dy
 
-      const x = index % boardSize.width
-      const y = Math.floor(index / boardSize.width)
+    if (nx < 0 || nx >= boardSize.width || ny < 0 || ny >= boardSize.height) {
+      continue
+    }
 
-      if (x + offsetX < 0 || x + offsetX >= boardSize.width || y + offsetY < 0 || y + offsetY >= boardSize.height) {
-        continue
-      }
+    const idx = nx + ny * boardSize.width
+    const tile = tiles[idx]
 
-      const idx = index + offsetX + offsetY * boardSize.width
-      const tile = tiles[idx]
-
-      if (tile) {
-        nearbyTiles.push(tile)
-      }
+    if (tile) {
+      nearbyTiles.push(tile)
     }
   }
 
