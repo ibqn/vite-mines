@@ -114,6 +114,15 @@ export const revealTileAtom = atom(null, (get, set, currentIndex: number) => {
     }
   }
   set(tilesAtom, newTiles)
+
+  const hiddenCount = newTiles.filter((tile) => tile.state === State.hidden).length
+  const markedCount = newTiles.filter((tile) => tile.state === State.marked).length
+  const mineCount = newTiles.filter((tile) => tile.mine).length
+
+  if (hiddenCount === 0 && mineCount === markedCount) {
+    set(gameStateAtom, GameState.won)
+    set(timerRunningAtom, false)
+  }
 })
 
 export const tryRevealTileAtom = atom(null, (get, set, index: number) => {
@@ -139,9 +148,14 @@ export const tryRevealTileAtom = atom(null, (get, set, index: number) => {
 export const markTileAtom = atom(null, (get, set, index: number) => {
   const tiles = get(tilesAtom)
   const selectedTile = tiles[index]
+  const gameState = get(gameStateAtom)
 
   const allowedStates: State[] = [State.hidden, State.marked]
   if (!allowedStates.includes(selectedTile.state)) {
+    return
+  }
+
+  if (gameState !== GameState.going) {
     return
   }
 
@@ -152,6 +166,15 @@ export const markTileAtom = atom(null, (get, set, index: number) => {
   )
   set(tilesAtom, newTiles)
   set(mineCountAtom, get(mineCountAtom) + (marked ? 1 : -1))
+
+  const hiddenCount = newTiles.filter((tile) => tile.state === State.hidden).length
+  const markedCount = newTiles.filter((tile) => tile.state === State.marked).length
+  const mineCount = newTiles.filter((tile) => tile.mine).length
+
+  if (hiddenCount === 0 && mineCount === markedCount) {
+    set(gameStateAtom, GameState.won)
+    set(timerRunningAtom, false)
+  }
 })
 
 export const resetGameAtom = atom(null, (_, set) => {
