@@ -1,3 +1,4 @@
+import { useMillisecondTimer } from '@/hooks/use-millisecond-timer'
 import { gameStateAtom, generateMinePositionsAtom, markTileAtom, revealTileAtom, tryRevealTileAtom } from '@/store'
 import { GameState, type Tile } from '@/types'
 import { useAtom, useSetAtom } from 'jotai'
@@ -15,12 +16,14 @@ export const Cell = ({ tile }: CellProps) => {
   const revealTile = useSetAtom(revealTileAtom)
   const tryRevealTile = useSetAtom(tryRevealTileAtom)
   const [gameState, setGameState] = useAtom(gameStateAtom)
+  const { start } = useMillisecondTimer()
 
   const handleClick = (index: number) => () => {
     console.log('Cell clicked:', index)
     if (gameState === GameState.idle) {
       generateMinePositions(index)
       setGameState(GameState.going)
+      start()
     }
 
     if (gameState !== GameState.going && gameState !== GameState.idle) {
