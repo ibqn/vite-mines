@@ -12,9 +12,7 @@ export const tilesAtom = atom<Tile[]>([])
 export const initializeTilesAtom = atom(null, (get, set) => {
   const boardSize = get(boardSizeAtom)
   const initialTiles = Array.from({ length: boardSize.width * boardSize.height }).map((_, index) => {
-    const x = index % boardSize.width
-    const y = Math.floor(index / boardSize.width)
-    return { index, x, y, state: State.hidden } satisfies Tile
+    return { index, state: State.hidden } satisfies Tile
   })
 
   set(tilesAtom, initialTiles)
@@ -49,7 +47,7 @@ const neighborOffsets = [
   [-1,  1], [0,  1], [1,  1],
 ]
 
-export const nearbyTilesAtom = atom((get) => (index: number) => {
+const nearbyTilesAtom = atom((get) => (index: number) => {
   const tiles = get(tilesAtom)
   const boardSize = get(boardSizeAtom)
   const x = index % boardSize.width
@@ -99,15 +97,11 @@ export const revealTileAtom = atom(null, (get, set, currentIndex: number) => {
       set(gameStateAtom, GameState.lost)
       return
     }
-    console.log('Revealing safe tile:', queueIndex, newTiles[queueIndex])
 
     newTiles[queueIndex].state = State.number
 
     const nearbyTiles = getNearbyTiles(queueIndex)
-    console.log('Nearby tiles:', nearbyTiles)
-
     const nearbyMinesCount = nearbyTiles.filter((tile) => tile.mine).length
-    console.log('Nearby mines count:', nearbyMinesCount)
 
     if (nearbyMinesCount === 0) {
       for (const nearbyTile of nearbyTiles) {

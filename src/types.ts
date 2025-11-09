@@ -9,8 +9,6 @@ export type State = (typeof State)[keyof typeof State]
 
 export type Tile = {
   index: number
-  x: number
-  y: number
   state: State
   mine?: boolean
   adjacentMinesCount?: number
