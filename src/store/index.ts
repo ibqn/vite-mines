@@ -75,6 +75,18 @@ const nearbyTilesAtom = atom((get) => (index: number) => {
   return nearbyTiles
 })
 
+export const checkWinConditionAtom = atom(null, (get, set) => {
+  const tiles = get(tilesAtom)
+  const hiddenCount = tiles.filter((tile) => tile.state === State.hidden).length
+  const markedCount = tiles.filter((tile) => tile.state === State.marked).length
+  const mineCount = tiles.filter((tile) => tile.mine).length
+
+  if (hiddenCount === 0 && mineCount === markedCount) {
+    set(gameStateAtom, GameState.won)
+    set(timerRunningAtom, false)
+  }
+})
+
 export const revealTileAtom = atom(null, (get, set, currentIndex: number) => {
   console.log('Revealing tile:', currentIndex)
   const tiles = get(tilesAtom)
@@ -115,14 +127,7 @@ export const revealTileAtom = atom(null, (get, set, currentIndex: number) => {
   }
   set(tilesAtom, newTiles)
 
-  const hiddenCount = newTiles.filter((tile) => tile.state === State.hidden).length
-  const markedCount = newTiles.filter((tile) => tile.state === State.marked).length
-  const mineCount = newTiles.filter((tile) => tile.mine).length
-
-  if (hiddenCount === 0 && mineCount === markedCount) {
-    set(gameStateAtom, GameState.won)
-    set(timerRunningAtom, false)
-  }
+  set(checkWinConditionAtom)
 })
 
 export const tryRevealTileAtom = atom(null, (get, set, index: number) => {
@@ -167,14 +172,7 @@ export const markTileAtom = atom(null, (get, set, index: number) => {
   set(tilesAtom, newTiles)
   set(mineCountAtom, get(mineCountAtom) + (marked ? 1 : -1))
 
-  const hiddenCount = newTiles.filter((tile) => tile.state === State.hidden).length
-  const markedCount = newTiles.filter((tile) => tile.state === State.marked).length
-  const mineCount = newTiles.filter((tile) => tile.mine).length
-
-  if (hiddenCount === 0 && mineCount === markedCount) {
-    set(gameStateAtom, GameState.won)
-    set(timerRunningAtom, false)
-  }
+  set(checkWinConditionAtom)
 })
 
 export const resetGameAtom = atom(null, (_, set) => {
