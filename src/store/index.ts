@@ -138,6 +138,11 @@ export const markTileAtom = atom(null, (get, set, index: number) => {
   const tiles = get(tilesAtom)
   const selectedTile = tiles[index]
 
+  const allowedStates: State[] = [State.hidden, State.marked]
+  if (!allowedStates.includes(selectedTile.state)) {
+    return
+  }
+
   const marked = selectedTile.state === State.marked
 
   const newTiles = tiles.map((tile) =>
