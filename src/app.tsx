@@ -1,12 +1,22 @@
 import { Board } from '@/components/board'
 import { useAtomValue } from 'jotai'
-import { mineCountAtom } from './store'
+import { gameStateAtom, mineCountAtom } from './store'
 import { useMillisecondTimer } from './hooks/use-millisecond-timer'
 import { format } from 'date-fns'
+import { useEffect } from 'react'
+import { GameState } from './types'
 
 export const App = () => {
   const minesCount = useAtomValue(mineCountAtom)
-  const { elapsed } = useMillisecondTimer()
+  const { elapsed, stop } = useMillisecondTimer()
+
+  const gameState = useAtomValue(gameStateAtom)
+
+  useEffect(() => {
+    if (gameState === GameState.lost || gameState === GameState.won) {
+      stop()
+    }
+  }, [gameState, stop])
 
   return (
     <main className="flex min-h-svh flex-col items-center gap-10 pt-20">

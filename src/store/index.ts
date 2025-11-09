@@ -2,6 +2,7 @@ import { GameState, State, type Tile } from '@/types'
 import { NUMBER_OF_MINES } from '@/utils/constants'
 import { randomNumber } from '@/utils/random'
 import { atom } from 'jotai'
+import { timerElapsedAtom, timerRunningAtom, timerStartAtom } from './timer'
 
 export const boardSizeAtom = atom({ width: 9, height: 9 })
 
@@ -95,6 +96,7 @@ export const revealTileAtom = atom(null, (get, set, currentIndex: number) => {
       newTiles[queueIndex].state = State.mine
       set(tilesAtom, newTiles)
       set(gameStateAtom, GameState.lost)
+      set(timerRunningAtom, false)
       return
     }
 
@@ -150,4 +152,11 @@ export const markTileAtom = atom(null, (get, set, index: number) => {
   )
   set(tilesAtom, newTiles)
   set(mineCountAtom, get(mineCountAtom) + (marked ? 1 : -1))
+})
+
+export const resetGameAtom = atom(null, (_, set) => {
+  set(gameStateAtom, GameState.idle)
+  set(timerRunningAtom, false)
+  set(timerStartAtom, null)
+  set(timerElapsedAtom, 0)
 })
