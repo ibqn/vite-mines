@@ -11,6 +11,15 @@ importers:
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
+      immer:
+        specifier: ^10.2.0
+        version: 10.2.0
+      jotai:
+        specifier: ^2.15.1
+        version: 2.15.1(@babel/core@7.28.5)(@babel/template@7.27.2)(@types/react@19.2.2)(react@19.2.0)
+      jotai-immer:
+        specifier: ^0.4.1
+        version: 0.4.1(immer@10.2.0)(jotai@2.15.1(@babel/core@7.28.5)(@babel/template@7.27.2)(@types/react@19.2.2)(react@19.2.0))
       react:
         specifier: ^19.2.0
         version: 19.2.0
@@ -965,6 +974,9 @@ packages:
     resolution: {integrity: sha512-Hs59xBNfUIunMFgWAbGX5cq6893IbWg4KnrjbYwX3tx0ztorVgTDA6B2sxf8ejHJ4wz8BqGUMYlnzNBer5NvGg==}
     engines: {node: '>= 4'}
 
+  immer@10.2.0:
+    resolution: {integrity: sha512-d/+XTN3zfODyjr89gM3mPq1WNX2B8pYsu7eORitdwyA2sBubnTl3laYlBk4sXY5FUa5qTZGBDPJICVbvqzjlbw==}
+
   import-fresh@3.3.1:
     resolution: {integrity: sha512-TR3KfrTZTYLPB6jUjfx6MF9WcWrHL9su5TObK4ZkYgBdWKPOFoSoQIdEuTuR82pmtxH2spWG9h6etwfr1pLBqQ==}
     engines: {node: '>=6'}
@@ -991,6 +1003,30 @@ packages:
   jiti@2.6.1:
     resolution: {integrity: sha512-ekilCSN1jwRvIbgeg/57YFh8qQDNbwDb9xT/qu2DAHbFFZUicIl4ygVaAvzveMhMVr3LnpSKTNnwt8PoOfmKhQ==}
     hasBin: true
+
+  jotai-immer@0.4.1:
+    resolution: {integrity: sha512-nQTt1HBKie/5OJDck1qLpV1PeBA6bjJLAczEYAx70PD8R4Mbu7gtexfBUCzJh6W6ecsOfwHksAYAesVth6SN9A==}
+    peerDependencies:
+      immer: '>=9.0.0'
+      jotai: '>=2.0.0'
+
+  jotai@2.15.1:
+    resolution: {integrity: sha512-yHT1HAZ3ba2Q8wgaUQ+xfBzEtcS8ie687I8XVCBinfg4bNniyqLIN+utPXWKQE93LMF5fPbQSVRZqgpcN5yd6Q==}
+    engines: {node: '>=12.20.0'}
+    peerDependencies:
+      '@babel/core': '>=7.0.0'
+      '@babel/template': '>=7.0.0'
+      '@types/react': '>=17.0.0'
+      react: '>=17.0.0'
+    peerDependenciesMeta:
+      '@babel/core':
+        optional: true
+      '@babel/template':
+        optional: true
+      '@types/react':
+        optional: true
+      react:
+        optional: true
 
   js-tokens@4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
@@ -2290,6 +2326,8 @@ snapshots:
 
   ignore@7.0.5: {}
 
+  immer@10.2.0: {}
+
   import-fresh@3.3.1:
     dependencies:
       parent-module: 1.0.1
@@ -2308,6 +2346,18 @@ snapshots:
   isexe@2.0.0: {}
 
   jiti@2.6.1: {}
+
+  jotai-immer@0.4.1(immer@10.2.0)(jotai@2.15.1(@babel/core@7.28.5)(@babel/template@7.27.2)(@types/react@19.2.2)(react@19.2.0)):
+    dependencies:
+      immer: 10.2.0
+      jotai: 2.15.1(@babel/core@7.28.5)(@babel/template@7.27.2)(@types/react@19.2.2)(react@19.2.0)
+
+  jotai@2.15.1(@babel/core@7.28.5)(@babel/template@7.27.2)(@types/react@19.2.2)(react@19.2.0):
+    optionalDependencies:
+      '@babel/core': 7.28.5
+      '@babel/template': 7.27.2
+      '@types/react': 19.2.2
+      react: 19.2.0
 
   js-tokens@4.0.0: {}
 
