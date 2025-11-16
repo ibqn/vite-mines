@@ -54,7 +54,7 @@ export const Cell = ({ tile }: CellProps) => {
   return (
     <div
       ref={ref}
-      className="flex size-10 cursor-pointer border border-gray-400 bg-gray-400 bg-center bg-no-repeat
+      className="flex size-8 cursor-pointer border border-gray-400 bg-gray-400 bg-center bg-no-repeat
         data-[state=marked]:bg-yellow-400 data-[state=marked]:bg-[url('/images/flag.svg')] data-[state=mine]:bg-red-700
         data-[state=mine]:bg-[url('/images/mine.svg')] data-[state=number]:bg-white md:size-16"
       onClick={handleClick(tile.index)}
