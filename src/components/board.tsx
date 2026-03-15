@@ -14,8 +14,8 @@ export const Board = () => {
 
   return (
     <div
-      className="grid grid-cols-[repeat(var(--board-width),1fr)] grid-rows-[repeat(var(--board-height),1fr)] gap-1
-        bg-gray-200 p-1.5"
+      className={`grid grid-cols-[repeat(var(--board-width),1fr)] grid-rows-[repeat(var(--board-height),1fr)] gap-1
+        bg-gray-200 p-1.5`}
       style={{
         ['--board-width' as string]: `${boardSize.width}`,
         ['--board-height' as string]: `${boardSize.height}`,
